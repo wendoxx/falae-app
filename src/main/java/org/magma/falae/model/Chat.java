@@ -20,4 +20,5 @@ public class Chat {
     private UUID id;
     @OneToMany(mappedBy = "chat")
     private Set<Message> messages;
+    private boolean isGroupChat;
 }
