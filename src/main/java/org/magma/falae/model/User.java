@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 
@@ -20,9 +21,11 @@ public class User implements UserDetails {
 
     @Id
     private Long id;
+    private String email;
     private String username;
     private String password;
-    //add roles
+    private String phoneNumber;
+    private Date birthDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
