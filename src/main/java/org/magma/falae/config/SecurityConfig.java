@@ -1,4 +1,4 @@
-package org.magma.falae.Config;
+package org.magma.falae.config;
 
 import org.magma.falae.infra.SecurityFilter;
 import org.springframework.beans.factory.annotation.Autowired;
