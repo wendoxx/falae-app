@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -15,7 +16,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
@@ -28,10 +28,25 @@ public class User implements UserDetails {
     private String password;
     private String phoneNumber;
     private Date birthDate;
+    private UserRole role;
+
+    public User(String email, String username, String password, String phoneNumber, Date birthDate, UserRole role) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        //add roles and authorities later
+        if (this.role == UserRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
     }
 
     @Override
