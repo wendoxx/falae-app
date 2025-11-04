@@ -25,7 +25,7 @@ public class AuthenticationService {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    public RegisterResponseDTO Register(RegisterRequestDTO registerRequestDTO) {
+    public RegisterResponseDTO register(RegisterRequestDTO registerRequestDTO) {
         if (userRepository.existsByEmail(registerRequestDTO.email())) {
             throw new RuntimeException("User already exists");
         }
@@ -37,7 +37,7 @@ public class AuthenticationService {
         return new RegisterResponseDTO(savedUser.getEmail(), savedUser.getRole());
     }
 
-    public LoginResponseDTO Login(LoginRequestDTO loginRequestDTO) {
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.password());
         var authentication = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) authentication.getPrincipal());
