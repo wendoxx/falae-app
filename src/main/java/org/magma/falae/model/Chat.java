@@ -21,4 +21,5 @@ public class Chat {
     @OneToMany(mappedBy = "chat")
     private Set<Message> messages;
     private boolean isGroupChat;
+    //TODO: implement participants field and decide how collection type it will be
 }
