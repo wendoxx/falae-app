@@ -8,14 +8,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
@@ -29,6 +27,8 @@ public class User implements UserDetails {
     private String phoneNumber;
     private Date birthDate;
     private UserRole role;
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    private Set<Chat> chats = new HashSet<>();
 
     public User(String email, String username, String password, String phoneNumber, Date birthDate, UserRole role) {
         this.email = email;
