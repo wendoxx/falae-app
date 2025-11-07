@@ -1,18 +1,19 @@
 package org.magma.falae.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.magma.falae.dto.response.ChatResponseDTO;
+import org.magma.falae.dto.request.ChatRequestDTO;
+
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class Chat {
 
@@ -20,8 +21,7 @@ public class Chat {
     private UUID id;
 
     @OneToMany(mappedBy = "chat")
-
-    private Set<Message> messages;
+    private List<Message> messages;
 
     private boolean isGroupChat;
 
@@ -33,9 +33,9 @@ public class Chat {
     )
     private Set<User> participants = new HashSet<>();
 
-    public Chat(ChatResponseDTO chatResponseDTO){
-        this.id = chatResponseDTO.id();
-        this.messages = chatResponseDTO.messages();
-        this.isGroupChat = chatResponseDTO.isGroupChat();
+    public Chat(ChatRequestDTO chatRequestDTO, Set<User> participants){
+        this.id = chatRequestDTO.id();
+        this.isGroupChat = chatRequestDTO.isGroupChat();
+        this.participants = participants;
     }
 }
