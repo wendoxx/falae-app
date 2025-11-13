@@ -23,7 +23,8 @@ public class ChatService {
     /*public ChatResponseDTO createPrivateChat(ChatRequestDTO chatRequestDTO) {
         Chat chat;
 
-        add variable for user 1 and user 2 to method parameters
+        User authenticatedUser =
+       // add variable for user 1 and user 2 to method parameters
 
         if(chatRepository.findPrivateChatByParticipants()){
             // Logic for creating one-on-one chat
@@ -31,7 +32,9 @@ public class ChatService {
             // Logic for creating group chat
         }
         return null; // Replace with actual return
-    }*/
+    }
+     */
+
 
     public void getChat() {
         // Implementation goes here
