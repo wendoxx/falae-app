@@ -9,6 +9,9 @@ import org.magma.falae.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ChatService {
@@ -19,22 +22,27 @@ public class ChatService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
 
-    /*public ChatResponseDTO createPrivateChat(ChatRequestDTO chatRequestDTO) {
-        Chat chat;
+    public ChatResponseDTO getOrCreateChat(ChatRequestDTO chatRequestDTO) {
 
-        User authenticatedUser =
-       // add variable for user 1 and user 2 to method parameters
+        User currentUser = userService.getAuthenticatedUser();
 
-        if(chatRepository.findPrivateChatByParticipants()){
-            // Logic for creating one-on-one chat
+        Set<User> participants = chatRequestDTO.participants().stream().map(id -> userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found."))).collect(Collectors.toSet());
+
+        participants.add(currentUser);
+
+        /*
+        // if its a chat group or not
+        if() {
+
         } else {
-            // Logic for creating group chat
-        }
-        return null; // Replace with actual return
-    }
-     */
 
+        }
+        */
+        return null;
+    }
 
     public void getChat() {
         // Implementation goes here
