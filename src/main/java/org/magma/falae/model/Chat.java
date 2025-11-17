@@ -33,6 +33,12 @@ public class Chat {
     )
     private Set<User> participants = new HashSet<>();
 
+    public void addParticipant(User user) {
+        this.participants.add(user);
+
+        user.getChats().add(this);
+    }
+
     public Chat(ChatRequestDTO chatRequestDTO, Set<User> participants){
         this.id = chatRequestDTO.id();
         this.isGroupChat = chatRequestDTO.isGroupChat();
