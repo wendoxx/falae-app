@@ -9,6 +9,7 @@ import org.magma.falae.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,11 @@ public class ChatService {
 
         User currentUser = userService.getAuthenticatedUser();
 
-        Set<User> participants = chatRequestDTO.participants().stream().map(id -> userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found."))).collect(Collectors.toSet());
+        Set<User> participants = chatRequestDTO.participants()
+                .stream()
+                .map(id -> userRepository
+                        .findById(id)
+                        .orElseThrow(() -> new RuntimeException("User not found."))).collect(Collectors.toSet());
 
         participants.add(currentUser);
 
@@ -44,6 +49,39 @@ public class ChatService {
         return null;
     }
 
+    public ChatResponseDTO handleCreatePrivateChat(Set<User> participants) {
+
+        if(participants.size() != 2) {
+            throw new RuntimeException("Private chat must have exactly two participants.");
+        }
+
+        Iterator<User> iterator = participants.iterator();
+        User userA = iterator.next();
+        User userB = iterator.next();
+
+        Chat chat = chatRepository.findPrivateChatByParticipants(userA, userB).orElseGet(() -> {
+            Chat newChat = new Chat();
+            newChat.setGroupChat(false);
+
+            newChat.addParticipant(userA);
+            newChat.addParticipant(userB);
+
+            return chatRepository.save(newChat);
+        });
+
+        return null; // Convert Chat to ChatResponseDTO
+    }
+
+    public ChatResponseDTO handleCreateGroupChat(Set<User> participants) {
+
+        Chat groupChat = new Chat();
+        groupChat.setGroupChat(true);
+        groupChat.setParticipants(participants);
+
+        Chat savedChat = chatRepository.save(groupChat);
+        
+        return null;
+    }
     public void getChat() {
         // Implementation goes here
     }
