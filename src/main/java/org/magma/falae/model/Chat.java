@@ -22,8 +22,8 @@ public class Chat {
 
     @OneToMany(mappedBy = "chat")
     private List<Message> messages;
-
     private boolean isGroupChat;
+    private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
