@@ -42,7 +42,7 @@ public class ChatService {
         if(!chatRequestDTO.isGroupChat()) {
             return handleCreatePrivateChat(participants);
         } else {
-            return handleCreateGroupChat(participants);
+            return handleCreateGroupChat(null, participants, chatRequestDTO);
         }
     }
 
@@ -59,7 +59,7 @@ public class ChatService {
         Chat chat = chatRepository.findPrivateChatByParticipants(userA, userB).orElseGet(() -> {
             Chat newChat = new Chat();
             newChat.setGroupChat(false);
-
+            newChat.setName(userB.getUsername()); //TODO: verify if userB is the other user
             newChat.addParticipant(userA);
             newChat.addParticipant(userB);
 
@@ -68,11 +68,18 @@ public class ChatService {
         return convertToChatResponseDTO(chat);
     }
 
-    public ChatResponseDTO handleCreateGroupChat(Set<User> participants) {
+    public ChatResponseDTO handleCreateGroupChat(UUID chatId ,Set<User> participants, ChatRequestDTO chatRequestDTO) {
 
-        Chat groupChat = new Chat();
+        Chat groupChat;
+
+        if(chatRepository.existsById(chatId)) {
+            groupChat = chatRepository.findById(chatId).get();
+        } else {
+            groupChat = new Chat();
+        }
         groupChat.setGroupChat(true);
         groupChat.setParticipants(participants);
+        groupChat.setName(chatRequestDTO.name());
 
         Chat savedChat = chatRepository.save(groupChat);
 
@@ -84,9 +91,11 @@ public class ChatService {
                 chat.getId(),
                 chat.getMessages(),
                 chat.isGroupChat(),
-                chat.getParticipants()
+                chat.getParticipants(),
+                chat.getName()
         );
     }
+
     public ChatResponseDTO getChatById(UUID id) {
         return chatRepository.findById(id)
                 .map(this::convertToChatResponseDTO)
@@ -101,9 +110,6 @@ public class ChatService {
         chatRepository.deleteById(id);
     }
 
-    public void updateChat() {
-        // Implementation goes here
-    }
 
     public void listChats() {
         // Implementation goes here
