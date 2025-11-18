@@ -27,9 +27,9 @@ public class Chat {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "chat_participants", // Nome da tabela que liga Chats e Users
-            joinColumns = @JoinColumn(name = "chat_id"), // Chave estrangeira para ESTA classe (Chat)
-            inverseJoinColumns = @JoinColumn(name = "user_id") // Chave estrangeira para a OUTRA classe (User)
+            name = "chat_participants",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> participants = new HashSet<>();
 
