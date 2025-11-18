@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -38,15 +39,11 @@ public class ChatService {
 
         participants.add(currentUser);
 
-        /*
-        // if its a chat group or not
-        if() {
-
+        if(!chatRequestDTO.isGroupChat()) {
+            return handleCreatePrivateChat(participants);
         } else {
-
+            return handleCreateGroupChat(participants);
         }
-        */
-        return null;
     }
 
     public ChatResponseDTO handleCreatePrivateChat(Set<User> participants) {
@@ -68,8 +65,7 @@ public class ChatService {
 
             return chatRepository.save(newChat);
         });
-
-        return null; // Convert Chat to ChatResponseDTO
+        return convertToChatResponseDTO(chat);
     }
 
     public ChatResponseDTO handleCreateGroupChat(Set<User> participants) {
@@ -79,15 +75,30 @@ public class ChatService {
         groupChat.setParticipants(participants);
 
         Chat savedChat = chatRepository.save(groupChat);
-        
-        return null;
-    }
-    public void getChat() {
-        // Implementation goes here
+
+        return convertToChatResponseDTO(savedChat);
     }
 
-    public void deleteChat() {
-        // Implementation goes here
+    public ChatResponseDTO convertToChatResponseDTO(Chat chat) {
+        return new ChatResponseDTO(
+                chat.getId(),
+                chat.getMessages(),
+                chat.isGroupChat(),
+                chat.getParticipants()
+        );
+    }
+    public ChatResponseDTO getChatById(UUID id) {
+        return chatRepository.findById(id)
+                .map(this::convertToChatResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Chat not found."));
+
+    }
+
+    public void deleteChat(UUID id) {
+        if(!chatRepository.existsById(id)) {
+            throw new RuntimeException("Chat not found.");
+        }
+        chatRepository.deleteById(id);
     }
 
     public void updateChat() {
