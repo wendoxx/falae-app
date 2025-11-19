@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -111,13 +112,13 @@ public class ChatService {
     }
 
 
-    public void listChats() {
-        // Implementation goes here
+    public List<ChatResponseDTO> listChats() {
+        return chatRepository.findAll()
+                .stream()
+                .map(this::convertToChatResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    public void createGroupChat() {
-        // Implementation goes here
-    }
 
     public void addUserToGroupChat() {
         // Implementation goes here
