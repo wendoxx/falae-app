@@ -60,9 +60,9 @@ public class ChatService {
         Chat chat = chatRepository.findPrivateChatByParticipants(userA, userB).orElseGet(() -> {
             Chat newChat = new Chat();
             newChat.setGroupChat(false);
-            newChat.setName(userB.getUsername()); //TODO: verify if userB is the other user
             newChat.addParticipant(userA);
             newChat.addParticipant(userB);
+            newChat.setName(userB.getUsername()); //TODO: verify if userB is the other user
 
             return chatRepository.save(newChat);
         });
@@ -124,7 +124,12 @@ public class ChatService {
         // Implementation goes here
     }
 
-    public void removeUserFromGroupChat() {
-        // Implementation goes here
+    public ChatResponseDTO removeParticipantFromGroupChat(UUID chatId, UUID participantId) {
+        Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new RuntimeException("Chat not found."));
+        User participant = userRepository.findById(participantId).orElseThrow(() -> new RuntimeException("Participant not found."));
+
+        chat.removeParticipant(participant);
+        Chat updatedChat = chatRepository.save(chat);
+        return convertToChatResponseDTO(updatedChat);
     }
 }
