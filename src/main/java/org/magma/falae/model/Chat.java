@@ -39,6 +39,12 @@ public class Chat {
         user.getChats().add(this);
     }
 
+    public void removeParticipant(User user) {
+        this.participants.remove(user);
+
+        user.getChats().remove(this);
+    }
+
     public Chat(ChatRequestDTO chatRequestDTO, Set<User> participants){
         this.id = chatRequestDTO.id();
         this.isGroupChat = chatRequestDTO.isGroupChat();
