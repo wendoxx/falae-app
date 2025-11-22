@@ -112,9 +112,12 @@ public class ChatService {
     }
 
 
-    public List<ChatResponseDTO> listChats() {
-        return chatRepository.findAll()
-                .stream()
+    public List<ChatResponseDTO> listUserChats() {
+        User currentUser = userService.getAuthenticatedUser();
+
+        List<Chat> chats = chatRepository.findAllByParticipantsContains(currentUser);
+
+        return chats.stream()
                 .map(this::convertToChatResponseDTO)
                 .collect(Collectors.toList());
     }
