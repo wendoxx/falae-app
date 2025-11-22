@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record MessageRequestDTO (UUID chatId, UUID userId, @NotNull @NotBlank String content) {
+public record MessageRequestDTO (UUID id, UUID chatId, UUID userId, @NotNull @NotBlank String content) {
 }
