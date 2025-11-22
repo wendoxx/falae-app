@@ -11,6 +11,7 @@ import org.magma.falae.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -42,8 +43,16 @@ public class MessageService {
         return convertToDTO(savedMessage);
     }
 
-    public MessageResponseDTO getMessageById(MessageRequestDTO messageRequestDTO){
-        Message message = messageRepository.findById(messageRequestDTO.chatId())
+    public MessageResponseDTO updateMessage(MessageRequestDTO messageRequestDTO) {
+        Message message = messageRepository.findById(messageRequestDTO.id()).orElseThrow(() -> new RuntimeException("Message not found"));
+        message.setContent(messageRequestDTO.content());
+        message.setTimestamp(LocalDateTime.now());
+        Message savedMessage = messageRepository.save(message);
+        return convertToDTO(savedMessage);
+    }
+
+    public MessageResponseDTO getMessageById(UUID id){
+        Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found."));
         return convertToDTO(message);
     }
