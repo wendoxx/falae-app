@@ -1,5 +1,7 @@
 package org.magma.falae.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.magma.falae.dto.request.MessageRequestDTO;
 import org.magma.falae.dto.response.MessageResponseDTO;
 import org.magma.falae.model.Chat;
@@ -26,20 +28,30 @@ public class MessageService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public MessageResponseDTO createMessage(MessageRequestDTO messageRequestDTO) {
 
+        LOGGER.info("Posting a new message...");
         Message message = new Message();
 
+
         Chat chat = chatRepository.findById(messageRequestDTO.chatId())
-                .orElseThrow(() -> new RuntimeException("Chat not found."));
+                .orElseThrow(() -> {
+                    LOGGER.error("Chat not found.");
+                    return new RuntimeException("Chat not found.");
+                });
 
         User user = userRepository.findById(messageRequestDTO.userId())
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> { LOGGER.error("User not found.");
+                    return new RuntimeException("User not found.");
+                });
 
         message.setChat(chat);
         message.setSender(user);
         message.setContent(messageRequestDTO.content());
         Message savedMessage = messageRepository.save(message);
+        LOGGER.info("Message posted successfully.");
         return convertToDTO(savedMessage);
     }
 
