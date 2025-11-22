@@ -1,5 +1,7 @@
 package org.magma.falae.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.magma.falae.dto.request.ChatRequestDTO;
 import org.magma.falae.dto.response.ChatResponseDTO;
 import org.magma.falae.model.Chat;
@@ -28,8 +30,11 @@ public class ChatService {
     @Autowired
     private UserService userService;
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public ChatResponseDTO getOrCreateChat(ChatRequestDTO chatRequestDTO) {
 
+        LOGGER.info("Getting or creating chat...");
         User currentUser = userService.getAuthenticatedUser();
 
         Set<User> participants = chatRequestDTO.participants()
@@ -64,6 +69,7 @@ public class ChatService {
             newChat.addParticipant(userB);
             newChat.setName(userB.getUsername()); //TODO: verify if userB is the other user
 
+            LOGGER.info("Creating a new private chat...");
             return chatRepository.save(newChat);
         });
         return convertToChatResponseDTO(chat);
@@ -75,8 +81,10 @@ public class ChatService {
 
         if(chatRepository.existsById(chatId)) {
             groupChat = chatRepository.findById(chatId).get();
+            LOGGER.info("Updating existing group chat...");
         } else {
             groupChat = new Chat();
+            LOGGER.info("Creating a new group chat...");
         }
         groupChat.setGroupChat(true);
         groupChat.setParticipants(participants);
@@ -84,6 +92,7 @@ public class ChatService {
 
         Chat savedChat = chatRepository.save(groupChat);
 
+        LOGGER.info("Group chat created/updated successfully.");
         return convertToChatResponseDTO(savedChat);
     }
 
