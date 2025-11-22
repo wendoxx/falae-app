@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,5 +24,9 @@ public interface ChatRepository extends JpaRepository<Chat, UUID> {
             @Param("userB") User userB
     );
 
-    //List<Chat> findByUserName(String username);
+    @Query("SELECT c FROM Chat c JOIN c.messages m " +
+            "WHERE :user MEMBER OF c.participants " +
+            "GROUP BY c " +
+            "ORDER BY MAX(m.timestamp) DESC")
+    List<Chat> findAllByParticipantsContains(@Param("user") User user);
 }
