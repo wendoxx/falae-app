@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.magma.falae.dto.request.ChatRequestDTO;
 
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,9 +17,13 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-public class Chat {
+public class Chat implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @OneToMany(mappedBy = "chat")

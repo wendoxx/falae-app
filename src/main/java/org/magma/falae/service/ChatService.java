@@ -67,7 +67,7 @@ public class ChatService {
             newChat.setGroupChat(false);
             newChat.addParticipant(userA);
             newChat.addParticipant(userB);
-            newChat.setName(userB.getUsername()); //TODO: verify if userB is the other user
+            newChat.setName(userA.getUsername());
 
             LOGGER.info("Creating a new private chat...");
             return chatRepository.save(newChat);
