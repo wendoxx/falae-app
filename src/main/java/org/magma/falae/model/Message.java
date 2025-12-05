@@ -1,7 +1,6 @@
 package org.magma.falae.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.magma.falae.dto.request.MessageRequestDTO;
@@ -36,6 +35,5 @@ public class Message implements Serializable {
         this.content = messageRequestDTO.content();
         this.sender = sender;
         this.chat = chat;
-        this.timestamp = LocalDateTime.now();
     }
 }
