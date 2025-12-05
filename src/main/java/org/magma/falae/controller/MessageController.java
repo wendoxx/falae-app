@@ -17,12 +17,12 @@ public class MessageController {
     private MessageService messageService;
 
     @PostMapping("/send-message")
-    public ResponseEntity<MessageResponseDTO> sendMessage(MessageRequestDTO messageRequestDTO) {
+    public ResponseEntity<MessageResponseDTO> sendMessage(@RequestBody MessageRequestDTO messageRequestDTO) {
         return ResponseEntity.status(201).body(messageService.createMessage(messageRequestDTO));
     }
 
     @PutMapping("/update-message")
-    public ResponseEntity<MessageResponseDTO> updateMessage(MessageRequestDTO messageRequestDTO) {
+    public ResponseEntity<MessageResponseDTO> updateMessage(@RequestBody MessageRequestDTO messageRequestDTO) {
         return ResponseEntity.status(201).body(messageService.updateMessage(messageRequestDTO));
     }
 
