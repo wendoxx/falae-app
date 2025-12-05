@@ -50,6 +50,7 @@ public class MessageService {
         message.setChat(chat);
         message.setSender(user);
         message.setContent(messageRequestDTO.content());
+        message.setTimestamp(LocalDateTime.now());
         Message savedMessage = messageRepository.save(message);
         LOGGER.info("Message posted successfully.");
         return convertToDTO(savedMessage);
