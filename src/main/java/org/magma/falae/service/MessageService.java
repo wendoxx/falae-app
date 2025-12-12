@@ -11,6 +11,8 @@ import org.magma.falae.repository.ChatRepository;
 import org.magma.falae.repository.MessageRepository;
 import org.magma.falae.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,6 +29,9 @@ public class MessageService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -74,8 +79,19 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public void getMessagesByChatId() {
-        // Implementation goes here
+    public Page<MessageResponseDTO> listMessagesByChatId(UUID chatId, Pageable pageable) {
+
+        User currentUser = userService.getAuthenticatedUser();
+        Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new RuntimeException("Chat not found."));
+
+        if(!chat.getParticipants().contains(currentUser)){
+            throw new RuntimeException("Current user aren't allowed to see this messages.");
+        }
+
+        Page<Message> messagePage = messageRepository.findAllByChatId(chatId, pageable);
+
+        return messagePage.map(this::convertToDTO);
+
     }
 
     public MessageResponseDTO convertToDTO(Message message) {
