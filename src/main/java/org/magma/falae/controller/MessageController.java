@@ -4,9 +4,12 @@ import org.magma.falae.dto.request.MessageRequestDTO;
 import org.magma.falae.dto.response.MessageResponseDTO;
 import org.magma.falae.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
 @RestController
@@ -26,9 +29,14 @@ public class MessageController {
         return ResponseEntity.status(201).body(messageService.updateMessage(messageRequestDTO));
     }
 
-    @GetMapping("/message/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<MessageResponseDTO> getMessageById(@PathVariable UUID id) {
         return ResponseEntity.ok(messageService.getMessageById(id));
+    }
+
+    @GetMapping("/chat{chatId}")
+    public ResponseEntity<Page<MessageResponseDTO>> listMessageByChatId(@PathVariable UUID chatId, Pageable pageable) throws AccessDeniedException {
+        return ResponseEntity.ok(messageService.listMessagesByChatId(chatId, pageable));
     }
 
     @DeleteMapping("/delete-message/{id}")
