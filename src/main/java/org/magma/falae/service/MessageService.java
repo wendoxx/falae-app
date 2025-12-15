@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -79,19 +80,19 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public Page<MessageResponseDTO> listMessagesByChatId(UUID chatId, Pageable pageable) {
+    public Page<MessageResponseDTO> listMessagesByChatId(UUID chatId, Pageable pageable) throws AccessDeniedException {
 
         User currentUser = userService.getAuthenticatedUser();
+
         Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new RuntimeException("Chat not found."));
 
         if(!chat.getParticipants().contains(currentUser)){
-            throw new RuntimeException("Current user aren't allowed to see this messages.");
+            throw new AccessDeniedException("You don't have permission.");
         }
 
         Page<Message> messagePage = messageRepository.findAllByChatId(chatId, pageable);
 
         return messagePage.map(this::convertToDTO);
-
     }
 
     public MessageResponseDTO convertToDTO(Message message) {
