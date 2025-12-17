@@ -34,7 +34,7 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getMessageById(id));
     }
 
-    @GetMapping("/chat{chatId}")
+    @GetMapping("/chat/{chatId}")
     public ResponseEntity<Page<MessageResponseDTO>> listMessageByChatId(@PathVariable UUID chatId, Pageable pageable) throws AccessDeniedException {
         return ResponseEntity.ok(messageService.listMessagesByChatId(chatId, pageable));
     }
